@@ -48,12 +48,13 @@
         #overlay {
             position: relative;
             z-index: 1;
-            padding: 20px;
+            padding: 15px;
             overflow-y: auto;
             height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
 
         /* --- 2. Typography and Components --- */
@@ -62,10 +63,13 @@
             text-align: center;
             margin-bottom: 20px;
             text-shadow: 0 0 10px var(--accent-color);
-            letter-spacing: 3px;
-            font-size: clamp(1.8em, 5vw, 2.8em);
+            letter-spacing: 2px;
+            font-size: clamp(1.5em, 4vw, 2.8em);
             position: relative;
             padding-bottom: 10px;
+            width: 100%;
+            word-wrap: break-word;
+            padding: 0 10px;
         }
 
         h1::after {
@@ -74,7 +78,7 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: 80px;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--main-color), transparent);
         }
@@ -85,16 +89,17 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: clamp(1.2em, 3vw, 1.8em);
         }
 
         .container {
-            width: 95%;
+            width: 100%;
             max-width: 1400px;
             background: var(--container-bg);
             border: 1px solid var(--main-color);
             box-shadow: var(--border-glow);
-            padding: 25px;
-            margin-bottom: 25px;
+            padding: clamp(15px, 3vw, 25px);
+            margin-bottom: 20px;
             border-radius: 8px;
             animation: flicker 5s infinite alternate;
             backdrop-filter: blur(10px);
@@ -107,7 +112,7 @@
 
         /* --- 3. Enhanced Form Styling --- */
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             position: relative;
         }
 
@@ -115,7 +120,7 @@
             display: block;
             margin-bottom: 5px;
             color: var(--accent-color);
-            font-size: 0.9em;
+            font-size: 0.85em;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -129,6 +134,7 @@
             font-size: 1em;
             transition: all 0.3s;
             border-radius: 4px;
+            min-height: 48px;
         }
 
         textarea {
@@ -147,23 +153,24 @@
             display: flex;
             gap: 15px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .form-row .input-group {
-            flex: 1;
+            flex: 1 1 100%;
             margin-bottom: 0;
         }
 
         /* --- 4. Enhanced Button Styles --- */
         button {
-            padding: 12px 20px;
+            padding: 12px 15px;
             cursor: pointer;
             background: var(--main-color);
             color: var(--bg-color);
             border: none;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             transition: all 0.3s;
             margin: 0 5px 5px 0;
             border-radius: 4px;
@@ -173,6 +180,9 @@
             gap: 8px;
             position: relative;
             overflow: hidden;
+            font-size: 0.9em;
+            min-height: 44px;
+            flex: 1 1 auto;
         }
 
         button::after {
@@ -216,6 +226,7 @@
             border: 1px solid var(--main-color);
             width: 100%;
             margin-bottom: 20px;
+            flex: none;
         }
         
         .btn-toggle-form:hover {
@@ -269,13 +280,14 @@
         #data-list {
             margin-top: 20px;
             width: 100%;
+            overflow-x: auto;
         }
 
         /* Mobile Cards */
         .data-card {
             background: rgba(0, 0, 0, 0.5);
             border-left: 4px solid var(--main-color);
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 15px;
             opacity: 0;
             transform: translateY(10px);
@@ -313,6 +325,7 @@
 
         .data-field {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             margin-bottom: 10px;
             align-items: center;
@@ -321,7 +334,8 @@
         .data-field strong {
             color: var(--accent-color);
             margin-right: 10px;
-            min-width: 100px;
+            min-width: 80px;
+            font-size: 0.9em;
         }
 
         .mac-address {
@@ -331,15 +345,18 @@
             background: rgba(0, 255, 65, 0.1);
             padding: 3px 8px;
             border-radius: 3px;
+            word-break: break-word;
+            font-size: 0.9em;
         }
 
         .status-badge {
             display: inline-block;
             padding: 3px 10px;
             border-radius: 12px;
-            font-size: 0.8em;
+            font-size: 0.75em;
             font-weight: bold;
             text-transform: uppercase;
+            white-space: nowrap;
         }
 
         .status-active {
@@ -358,8 +375,16 @@
             display: flex;
             gap: 8px;
             margin-top: 15px;
-            justify-content: flex-end;
+            justify-content: flex-start;
             flex-wrap: wrap;
+        }
+
+        .card-actions button {
+            flex: 1 1 calc(50% - 8px);
+            min-width: 100px;
+            margin: 2px;
+            font-size: 0.85em;
+            padding: 8px 10px;
         }
 
         /* Desktop Table */
@@ -368,24 +393,27 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+            min-width: 800px;
         }
 
         .desktop-table th, 
         .desktop-table td {
-            padding: 15px 12px;
+            padding: 12px 10px;
             text-align: left;
             border-bottom: 1px solid rgba(0, 255, 65, 0.3);
+            font-size: 0.9em;
         }
 
         .desktop-table th {
             background: rgba(0, 255, 65, 0.1);
             color: var(--accent-color);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-size: 0.9em;
+            letter-spacing: 1px;
+            font-size: 0.85em;
             position: sticky;
             top: 0;
             z-index: 10;
+            white-space: nowrap;
         }
         
         .desktop-table td {
@@ -400,31 +428,123 @@
         .table-actions {
             display: flex;
             gap: 5px;
+            flex-wrap: nowrap;
         }
 
-        /* Responsive breakpoints */
-        @media (max-width: 767px) {
-            .data-card { display: block; }
-            .desktop-table { display: none; }
-            .form-row {
-                flex-direction: column;
-                gap: 0;
+        .table-actions button {
+            padding: 6px 8px;
+            font-size: 0.8em;
+            margin: 2px;
+            min-height: auto;
+        }
+
+        /* --- 6. Responsive Layout Adjustments --- */
+        /* Small Mobile (portrait) */
+        @media (max-width: 480px) {
+            #overlay {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.4em;
+                letter-spacing: 1px;
+            }
+            
+            .container {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+            
+            button {
+                font-size: 0.8em;
+                padding: 10px 8px;
+                min-height: 40px;
+            }
+            
+            .data-field strong {
+                min-width: 70px;
+                font-size: 0.85em;
+            }
+            
+            .card-actions button {
+                flex: 1 1 100%;
+                margin-bottom: 5px;
+            }
+            
+            .stats-panel {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .stat-item {
+                flex: 1 1 calc(50% - 10px);
+            }
+            
+            .stat-value {
+                font-size: 1.5em;
             }
         }
 
-        @media (min-width: 768px) {
+        /* Mobile (landscape) and small tablets */
+        @media (min-width: 481px) and (max-width: 767px) {
+            .form-row .input-group {
+                flex: 1 1 calc(50% - 8px);
+            }
+            
+            .card-actions button {
+                flex: 1 1 calc(33.333% - 8px);
+            }
+            
+            .stats-panel {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .stat-item {
+                flex: 1 1 calc(50% - 10px);
+            }
+        }
+
+        /* Tablets and small desktops */
+        @media (min-width: 768px) and (max-width: 1023px) {
             .data-card { display: none; }
             .desktop-table { display: table; }
             
-            .card-actions button,
-            .table-actions button {
-                padding: 8px 12px;
-                font-size: 0.85em;
-                margin: 2px;
+            .form-row .input-group {
+                flex: 1 1 calc(50% - 8px);
+            }
+            
+            .stats-panel {
+                flex-wrap: nowrap;
             }
         }
 
-        /* --- 6. Enhanced Utility and Error Handling --- */
+        /* Desktop and larger screens */
+        @media (min-width: 1024px) {
+            .data-card { display: none; }
+            .desktop-table { display: table; }
+            
+            .form-row .input-group {
+                flex: 1 1 auto;
+            }
+            
+            .stats-panel {
+                flex-wrap: nowrap;
+            }
+        }
+
+        /* Very large screens */
+        @media (min-width: 1200px) {
+            #overlay {
+                padding: 20px;
+            }
+            
+            .container {
+                padding: 25px;
+            }
+        }
+
+        /* --- 7. Enhanced Utility and Error Handling --- */
         .hidden {
             display: none !important;
         }
@@ -435,6 +555,7 @@
             border-radius: 5px;
             text-align: center;
             animation: slideIn 0.3s ease-out;
+            font-size: 0.9em;
         }
 
         @keyframes slideIn {
@@ -463,7 +584,7 @@
         /* Import/Export Section */
         .import-export {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             margin-top: 15px;
             flex-wrap: wrap;
             align-items: center;
@@ -471,19 +592,22 @@
         }
 
         .import-export button {
-            flex: 1;
-            min-width: 180px;
+            flex: 1 1 calc(50% - 10px);
+            min-width: 150px;
+            margin-bottom: 5px;
         }
 
         #import-file {
-            flex: 2;
-            min-width: 250px;
+            flex: 2 1 100%;
+            min-width: 100%;
+            margin-bottom: 10px;
         }
 
         /* Search Container */
         .search-container {
             margin-bottom: 20px;
             position: relative;
+            width: 100%;
         }
 
         .search-container i {
@@ -492,30 +616,36 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--accent-color);
+            z-index: 1;
         }
 
         .search-container input {
             padding-left: 45px;
+            width: 100%;
         }
 
         /* Filter Section */
         .filters {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 20px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .filter-group {
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
+            flex: 1 1 auto;
         }
 
         .filter-label {
             color: var(--accent-color);
-            font-size: 0.9em;
+            font-size: 0.85em;
             text-transform: uppercase;
+            white-space: nowrap;
         }
 
         /* Stats Panel */
@@ -532,17 +662,21 @@
         .stat-item {
             text-align: center;
             flex: 1;
+            min-width: 0;
+            padding: 0 5px;
         }
 
         .stat-value {
-            font-size: 2em;
+            font-size: clamp(1.5em, 3vw, 2em);
             color: var(--accent-color);
             font-weight: bold;
             display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .stat-label {
-            font-size: 0.9em;
+            font-size: 0.8em;
             color: var(--main-color);
             text-transform: uppercase;
         }
@@ -555,28 +689,34 @@
             flex-wrap: wrap;
         }
 
+        .quick-actions button {
+            flex: 1 1 auto;
+            min-width: 120px;
+        }
+
         /* Tag System */
         .tags-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             margin-top: 10px;
         }
 
         .tag {
             background: rgba(0, 255, 255, 0.1);
             border: 1px solid var(--accent-color);
-            padding: 3px 10px;
+            padding: 3px 8px;
             border-radius: 12px;
-            font-size: 0.8em;
+            font-size: 0.75em;
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            white-space: nowrap;
         }
 
         .tag i {
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 0.8em;
         }
 
         .tag i:hover {
@@ -601,12 +741,67 @@
 
         /* Footer */
         .footer {
-            margin-top: 30px;
+            margin-top: 20px;
             text-align: center;
             color: var(--main-color);
-            font-size: 0.9em;
-            padding: 20px;
+            font-size: 0.8em;
+            padding: 15px;
             border-top: 1px solid rgba(0, 255, 65, 0.3);
+            width: 100%;
+        }
+        
+        .footer p {
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .footer button {
+            flex: none;
+            display: inline-block;
+            width: auto;
+            margin: 5px;
+        }
+
+        /* Form responsiveness improvements */
+        #consumer-form {
+            width: 100%;
+        }
+        
+        /* Make sure the table scrolls horizontally on mobile */
+        @media (max-width: 767px) {
+            #data-list {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .desktop-table {
+                min-width: 800px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            button, input, select, textarea {
+                min-height: 44px; /* Minimum touch target size */
+            }
+            
+            .table-actions button {
+                min-height: 36px;
+                padding: 8px 10px;
+            }
+            
+            .card-actions button {
+                min-height: 40px;
+            }
+            
+            /* Reduce hover effects on touch devices */
+            button:hover {
+                transform: none;
+            }
+            
+            .data-card:hover {
+                transform: none;
+            }
         }
     </style>
 </head>
@@ -1648,4 +1843,4 @@
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
-  </html>
+</html>
