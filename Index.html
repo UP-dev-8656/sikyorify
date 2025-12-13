@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U-P.dev | MAC Address Manager</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 0. Core Professional Hacker Theme --- */
+        :root {
+            --bg-color: #0d1117;
+            --main-color: #00ff41;
+            --accent-color: #00ffff;
+            --error-color: #ff0041;
+            --warning-color: #ffcc00;
+            --font-family: 'Consolas', 'Monospace', monospace;
+            --container-bg: rgba(17, 24, 39, 0.85);
+            --border-glow: 0 0 8px var(--main-color);
+            --success-color: #00ff88;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+            color: var(--main-color);
+        }
+
+        html, body {
+            height: 100%;
+            background-color: var(--bg-color);
+            overflow-x: hidden;
+        }
+
+        /* --- 1. Enhanced 3D Canvas --- */
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        #overlay {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            overflow-y: auto;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- 2. Typography and Components --- */
+        h1 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--accent-color);
+            letter-spacing: 3px;
+            font-size: clamp(1.8em, 5vw, 2.8em);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--main-color), transparent);
+        }
+
+        h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            background: var(--container-bg);
+            border: 1px solid var(--main-color);
+            box-shadow: var(--border-glow);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            animation: flicker 5s infinite alternate;
+            backdrop-filter: blur(10px);
+        }
+        
+        @keyframes flicker {
+            0%, 100% { box-shadow: var(--border-glow); }
+            50% { box-shadow: 0 0 15px var(--main-color), inset 0 0 5px var(--main-color); }
+        }
+
+        /* --- 3. Enhanced Form Styling --- */
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--accent-color);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="text"], input[type="file"], select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--main-color);
+            color: var(--main-color);
+            font-size: 1em;
+            transition: all 0.3s;
+            border-radius: 4px;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row .input-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* --- 4. Enhanced Button Styles --- */
+        button {
+            padding: 12px 20px;
+            cursor: pointer;
+            background: var(--main-color);
+            color: var(--bg-color);
+            border: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.3s;
+            margin: 0 5px 5px 0;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        button:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(40, 40);
+                opacity: 0;
+            }
+        }
+
+        button:hover {
+            background: var(--accent-color);
+            box-shadow: 0 0 15px var(--accent-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-toggle-form {
+            background: transparent;
+            color: var(--main-color);
+            border: 1px solid var(--main-color);
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .btn-toggle-form:hover {
+            background: var(--main-color);
+            color: var(--bg-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-delete { 
+            background: var(--error-color); 
+            color: white; 
+        }
+        .btn-delete:hover { 
+            background: #ff416c; 
+            box-shadow: 0 0 15px var(--error-color);
+        }
+        .btn-edit, .btn-confirm { 
+            background: var(--accent-color); 
+            color: var(--bg-color); 
+        }
+        .btn-edit:hover, .btn-confirm:hover { 
+            background: #00ffff; 
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+        .btn-copy { 
+            background: rgba(0, 255, 65, 0.1); 
+            color: var(--main-color);
+            border: 1px solid var(--main-color);
+        }
+        .btn-copy:hover { 
+            background: rgba(0, 255, 65, 0.3); 
+        }
+        .btn-status {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+        .btn-status:hover {
+            background: rgba(0, 255, 136, 0.3);
+        }
+        .btn-clear-all {
+            background: rgba(255, 0, 65, 0.1);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+        .btn-clear-all:hover {
+            background: rgba(255, 0, 65, 0.3);
+        }
+
+        /* --- 5. Enhanced Data Display --- */
+        #data-list {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* Mobile Cards */
+        .data-card {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 4px solid var(--main-color);
+            padding: 20px;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.5s forwards;
+            border-radius: 5px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card:hover {
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            animation: scanline 3s infinite;
+        }
+
+        @keyframes scanline {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .data-field {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .data-field strong {
+            color: var(--accent-color);
+            margin-right: 10px;
+            min-width: 100px;
+        }
+
+        .mac-address {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            letter-spacing: 1px;
+            background: rgba(0, 255, 65, 0.1);
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .status-inactive {
+            background: rgba(255, 204, 0, 0.2);
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* Desktop Table */
+        .desktop-table {
+            display: none;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .desktop-table th, 
+        .desktop-table td {
+            padding: 15px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.3);
+        }
+
+        .desktop-table th {
+            background: rgba(0, 255, 65, 0.1);
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 0.9em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .desktop-table td {
+            background: rgba(0, 0, 0, 0.4);
+            transition: background 0.3s;
+        }
+
+        .desktop-table tr:hover td {
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        /* Responsive breakpoints */
+        @media (max-width: 767px) {
+            .data-card { display: block; }
+            .desktop-table { display: none; }
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .data-card { display: none; }
+            .desktop-table { display: table; }
+            
+            .card-actions button,
+            .table-actions button {
+                padding: 8px 12px;
+                font-size: 0.85em;
+                margin: 2px;
+            }
+        }
+
+        /* --- 6. Enhanced Utility and Error Handling --- */
+        .hidden {
+            display: none !important;
+        }
+
+        .error-message, .status-message {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .error-message {
+            border: 1px solid var(--error-color);
+            background-color: rgba(255, 0, 65, 0.1);
+            color: var(--error-color);
+            animation: pulse 1.5s infinite alternate;
+        }
+        
+        .status-message {
+            border: 1px solid var(--main-color);
+            background-color: rgba(0, 255, 65, 0.1);
+            color: var(--main-color);
+        }
+
+        @keyframes pulse {
+            from { box-shadow: 0 0 5px var(--error-color); }
+            to { box-shadow: 0 0 15px var(--error-color); }
+        }
+
+        /* Import/Export Section */
+        .import-export {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .import-export button {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        #import-file {
+            flex: 2;
+            min-width: 250px;
+        }
+
+        /* Search Container */
+        .search-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-color);
+        }
+
+        .search-container input {
+            padding-left: 45px;
+        }
+
+        /* Filter Section */
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-label {
+            color: var(--accent-color);
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        /* Stats Panel */
+        .stats-panel {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            color: var(--accent-color);
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: var(--main-color);
+            text-transform: uppercase;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Tag System */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--accent-color);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tag i {
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .tag i:hover {
+            color: var(--error-color);
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--main-color);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--main-color);
+            font-size: 0.9em;
+            padding: 20px;
+            border-top: 1px solid rgba(0, 255, 65, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="three-canvas"></canvas>
+
+    <div id="overlay">
+        <h1><i class="fas fa-network-wired"></i> U-P.dev // MAC Manager PRO</h1>
+        
+        <div id="message-container" class="container hidden"></div>
+
+        <!-- Stats Panel -->
+        <div class="container">
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <span class="stat-value" id="total-devices">0</span>
+                    <span class="stat-label">Total Devices</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="active-devices">0</span>
+                    <span class="stat-label">Active</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="unique-vendors">0</span>
+                    <span class="stat-label">Vendors</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="storage-used">0KB</span>
+                    <span class="stat-label">Storage</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Consumer Section -->
+        <div id="add-consumer-section" class="container">
+            <button class="btn-toggle-form" onclick="toggleForm()">
+                <i class="fas fa-plus-circle"></i>
+                <span id="form-toggle-text">ADD NEW DEVICE [ + ]</span>
+            </button>
+            <form id="consumer-form" class="hidden">
+                <input type="hidden" id="consumer-id">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label class="input-label" for="name"><i class="fas fa-user"></i> Consumer Name</label>
+                        <input type="text" id="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="device"><i class="fas fa-laptop"></i> Device Name</label>
+                        <input type="text" id="device" placeholder="iPhone 13, Dell XPS, etc." required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label class="input-label" for="mac"><i class="fas fa-network-wired"></i> MAC Address</label>
+                        <input type="text" id="mac" placeholder="00:1A:2B:3C:4D:5E" pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" required>
+                        <div class="quick-actions">
+                            <button type="button" class="btn-copy" onclick="generateRandomMAC()">
+                                <i class="fas fa-random"></i> Generate
+                            </button>
+                            <button type="button" class="btn-copy" onclick="copyCurrentMAC()">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="status"><i class="fas fa-circle"></i> Status</label>
+                        <select id="status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="tags"><i class="fas fa-tags"></i> Tags (comma separated)</label>
+                    <input type="text" id="tags" placeholder="home, office, guest, iot">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="notes"><i class="fas fa-sticky-note"></i> Notes</label>
+                    <textarea id="notes" placeholder="Additional information about this device..."></textarea>
+                </div>
+                <div class="quick-actions">
+                    <button type="submit" id="submit-button">
+                        <i class="fas fa-plus"></i> ADD DEVICE
+                    </button>
+                    <button type="button" class="btn-clear-all" onclick="resetForm()">
+                        <i class="fas fa-redo"></i> RESET
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="container">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search by Name, Device, MAC, Tags...">
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <span class="filter-label">Status:</span>
+                    <button class="btn-status" onclick="filterByStatus('all')">All</button>
+                    <button class="btn-status" onclick="filterByStatus('active')">Active</button>
+                    <button class="btn-status" onclick="filterByStatus('inactive')">Inactive</button>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Sort:</span>
+                    <select id="sort-by" onchange="sortData()">
+                        <option value="name">Name A-Z</option>
+                        <option value="name-desc">Name Z-A</option>
+                        <option value="date">Newest First</option>
+                        <option value="date-oldest">Oldest First</option>
+                        <option value="device">Device</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="import-export">
+                <button onclick="exportData()">
+                    <i class="fas fa-download"></i> EXPORT JSON
+                </button>
+                <button onclick="exportCSV()">
+                    <i class="fas fa-file-csv"></i> EXPORT CSV
+                </button>
+                <input type="file" id="import-file" accept=".json,.csv">
+                <button onclick="importData()">
+                    <i class="fas fa-upload"></i> IMPORT DATA
+                </button>
+                <button class="btn-clear-all" onclick="clearAllData()">
+                    <i class="fas fa-trash-alt"></i> CLEAR ALL
+                </button>
+            </div>
+        </div>
+
+        <!-- Data Display -->
+        <div class="container">
+            <h2><i class="fas fa-database"></i> DEVICE REGISTRY [ <span id="record-count">0</span> ]</h2>
+            <div id="data-list">
+                <!-- Data will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>U-P.dev MAC Manager v2.0 | <span id="last-save">Never saved</span></p>
+            <p>Total Storage: <span id="storage-size">0 KB</span> | <button class="btn-copy" onclick="backupData()"><i class="fas fa-save"></i> Create Backup</button></p>
+        </div>
+    </div>
+
+    <script>
+        // --- ENHANCED MAIN APPLICATION ---
+        const STORAGE_KEY = 'updev_mac_data_v2';
+        const BACKUP_KEY = 'updev_mac_backup';
+        let consumerData = [];
+        let isEditing = false;
+        let currentFilter = 'all';
+        let currentSort = 'date';
+
+        // Vendor database (partial)
+        const VENDOR_DB = {
+            '00:1A:2B': 'Cisco',
+            '00:0C:29': 'VMware',
+            '00:50:56': 'VMware',
+            '00:1B:63': 'Apple',
+            '00:1E:52': 'Dell',
+            '00:24:81': 'ASUS',
+            '00:26:4A': 'TP-Link',
+            '00:0D:4B': 'Intel',
+            '00:1D:0F': 'Microsoft',
+            '00:19:99': 'Netgear'
+        };
+
+        // DOM Elements
+        const form = document.getElementById('consumer-form');
+        const dataList = document.getElementById('data-list');
+        const messageContainer = document.getElementById('message-container');
+        const searchInput = document.getElementById('search-input');
+        const submitButton = document.getElementById('submit-button');
+        const formToggleText = document.getElementById('form-toggle-text');
+        const recordCount = document.getElementById('record-count');
+        const totalDevices = document.getElementById('total-devices');
+        const activeDevices = document.getElementById('active-devices');
+        const uniqueVendors = document.getElementById('unique-vendors');
+        const storageUsed = document.getElementById('storage-used');
+        const lastSave = document.getElementById('last-save');
+        const storageSize = document.getElementById('storage-size');
+
+        // --- ENHANCED UTILITY FUNCTIONS ---
+        const generateId = () => Date.now().toString(36) + Math.random().toString(36).substring(2);
+
+        function showMessage(message, isError = false, duration = 5000) {
+            messageContainer.classList.remove('hidden');
+            messageContainer.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i class="fas fa-${isError ? 'exclamation-triangle' : 'check-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            messageContainer.className = `container ${isError ? 'error-message' : 'status-message'}`;
+
+            clearTimeout(window.messageTimeout);
+            window.messageTimeout = setTimeout(() => {
+                messageContainer.classList.add('hidden');
+            }, duration);
+        }
+
+        function getVendorFromMAC(mac) {
+            const prefix = mac.substring(0, 8).toUpperCase();
+            return VENDOR_DB[prefix] || 'Unknown Vendor';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function calculateStorage() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            const size = data ? (new Blob([data]).size / 1024).toFixed(2) : 0;
+            storageUsed.textContent = `${size} KB`;
+            storageSize.textContent = `${size} KB`;
+            return size;
+        }
+
+        // --- ENHANCED DATA MANAGEMENT ---
+        function loadData() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                consumerData = data ? JSON.parse(data) : [];
+                
+                // Migrate old data if needed
+                if (consumerData.length > 0 && !consumerData[0].createdAt) {
+                    consumerData = consumerData.map(item => ({
+                        ...item,
+                        id: item.id || generateId(),
+                        status: item.status || 'active',
+                        tags: item.tags || [],
+                        notes: item.notes || '',
+                        createdAt: item.createdAt || new Date().toISOString(),
+                        updatedAt: item.updatedAt || new Date().toISOString(),
+                        vendor: getVendorFromMAC(item.mac)
+                    }));
+                    saveData();
+                }
+                
+                updateStats();
+                renderData(consumerData);
+                lastSave.textContent = 'Last save: ' + formatDate(new Date());
+                calculateStorage();
+            } catch (error) {
+                showMessage(`DATA LOAD ERROR: ${error.message}`, true);
+                consumerData = [];
+            }
+        }
+
+        function saveData() {
+            try {
+                // Update timestamps
+                if (isEditing) {
+                    const id = document.getElementById('consumer-id').value;
+                    const index = consumerData.findIndex(c => c.id === id);
+                    if (index !== -1) {
+                        consumerData[index].updatedAt = new Date().toISOString();
+                    }
+                }
+                
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(consumerData));
+                localStorage.setItem('last_backup', new Date().toISOString());
+                updateStats();
+                renderData(consumerData);
+                lastSave.textContent = 'Last save: ' + formatDate(new Date());
+                calculateStorage();
+                showMessage('Data saved successfully!', false, 2000);
+            } catch (error) {
+                showMessage(`DATA SAVE ERROR: ${error.message}`, true);
+            }
+        }
+
+        function updateStats() {
+            totalDevices.textContent = consumerData.length;
+            activeDevices.textContent = consumerData.filter(c => c.status === 'active').length;
+            
+            // Count unique vendors
+            const vendors = new Set();
+            consumerData.forEach(item => {
+                if (item.vendor && item.vendor !== 'Unknown Vendor') {
+                    vendors.add(item.vendor);
+                }
+            });
+            uniqueVendors.textContent = vendors.size;
+        }
+
+        // --- ENHANCED FORM HANDLING ---
+        function toggleForm() {
+            form.classList.toggle('hidden');
+            formToggleText.innerHTML = form.classList.contains('hidden') 
+                ? '<i class="fas fa-plus-circle"></i> ADD NEW DEVICE [ + ]' 
+                : '<i class="fas fa-minus-circle"></i> HIDE FORM [ - ]';
+            
+            if (!form.classList.contains('hidden') && isEditing) {
+                resetForm();
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('consumer-id').value;
+            const name = document.getElementById('name').value.trim();
+            const device = document.getElementById('device').value.trim();
+            const mac = document.getElementById('mac').value.trim().toUpperCase();
+            const status = document.getElementById('status').value;
+            const tags = document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t);
+            const notes = document.getElementById('notes').value.trim();
+
+            // Validate MAC address
+            const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+            if (!macRegex.test(mac)) {
+                showMessage('ERROR: Invalid MAC Address format. Use XX:XX:XX:XX:XX:XX', true);
+                return;
+            }
+
+            // Check for duplicate MAC (except when editing)
+            const duplicate = consumerData.find(c => c.mac === mac && c.id !== id);
+            if (duplicate) {
+                showMessage(`ERROR: MAC ${mac} already exists for "${duplicate.name}"`, true);
+                return;
+            }
+
+            const now = new Date().toISOString();
+            
+            if (isEditing) {
+                // Update existing record
+                const index = consumerData.findIndex(c => c.id === id);
+                if (index !== -1) {
+                    consumerData[index] = { 
+                        ...consumerData[index],
+                        name, 
+                        device, 
+                        mac, 
+                        status,
+                        tags,
+                        notes,
+                        vendor: getVendorFromMAC(mac),
+                        updatedAt: now
+                    };
+                    showMessage('Device UPDATED successfully!', false);
+                }
+                resetForm();
+            } else {
+                // Add new record
+                const newConsumer = { 
+                    id: generateId(), 
+                    name, 
+                    device, 
+                    mac, 
+                    status,
+                    tags,
+                    notes,
+                    vendor: getVendorFromMAC(mac),
+                    createdAt: now,
+                    updatedAt: now
+                };
+                consumerData.unshift(newConsumer);
+                showMessage('Device ADDED successfully!', false);
+            }
+
+            saveData();
+            resetForm();
+        }
+
+        function resetForm() {
+            isEditing = false;
+            submitButton.innerHTML = '<i class="fas fa-plus"></i> ADD DEVICE';
+            document.getElementById('consumer-id').value = '';
+            document.getElementById('consumer-form').reset();
+        }
+
+        function generateRandomMAC() {
+            const hex = '0123456789ABCDEF';
+            let mac = '';
+            for (let i = 0; i < 6; i++) {
+                mac += hex[Math.floor(Math.random() * 16)] + hex[Math.floor(Math.random() * 16)];
+                if (i < 5) mac += ':';
+            }
+            document.getElementById('mac').value = mac;
+        }
+
+        function copyCurrentMAC() {
+            const mac = document.getElementById('mac').value;
+            if (mac) {
+                navigator.clipboard.writeText(mac)
+                    .then(() => showMessage('MAC copied to clipboard!', false, 2000));
+            }
+        }
+
+        // --- ENHANCED CRUD OPERATIONS ---
+        function editConsumer(id) {
+            const consumer = consumerData.find(c => c.id === id);
+            if (!consumer) {
+                showMessage('ERROR: Device not found!', true);
+                return;
+            }
+
+            document.getElementById('consumer-id').value = consumer.id;
+            document.getElementById('name').value = consumer.name;
+            document.getElementById('device').value = consumer.device;
+            document.getElementById('mac').value = consumer.mac;
+            document.getElementById('status').value = consumer.status || 'active';
+            document.getElementById('tags').value = consumer.tags ? consumer.tags.join(', ') : '';
+            document.getElementById('notes').value = consumer.notes || '';
+            
+            isEditing = true;
+            submitButton.innerHTML = '<i class="fas fa-save"></i> UPDATE DEVICE';
+            
+            if (form.classList.contains('hidden')) {
+                toggleForm();
+            }
+            
+            // Scroll to form
+            document.getElementById('add-consumer-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteConsumer(id) {
+            if (confirm('⚠️ SYSTEM ALERT: Delete this device permanently?')) {
+                const deleted = consumerData.find(c => c.id === id);
+                consumerData = consumerData.filter(c => c.id !== id);
+                saveData();
+                showMessage(`Device "${deleted.name}" deleted!`, false);
+                
+                if (isEditing && document.getElementById('consumer-id').value === id) {
+                    resetForm();
+                }
+            }
+        }
+
+        function toggleStatus(id) {
+            const index = consumerData.findIndex(c => c.id === id);
+            if (index !== -1) {
+                consumerData[index].status = consumerData[index].status === 'active' ? 'inactive' : 'active';
+                consumerData[index].updatedAt = new Date().toISOString();
+                saveData();
+                showMessage(`Status updated to ${consumerData[index].status}!`, false, 2000);
+            }
+        }
+
+        function copyMac(mac) {
+            navigator.clipboard.writeText(mac)
+                .then(() => showMessage(`MAC ${mac} copied!`, false, 2000))
+                .catch(err => showMessage(`COPY ERROR: ${err}`, true));
+        }
+
+        // --- FILTERING AND SORTING ---
+        function filterByStatus(status) {
+            currentFilter = status;
+            renderData(consumerData);
+            
+            // Update active button state
+            document.querySelectorAll('.filter-group .btn-status').forEach(btn => {
+                btn.style.background = btn.textContent.toLowerCase() === status ? 
+                    'rgba(0, 255, 136, 0.3)' : 'rgba(0, 255, 136, 0.1)';
+            });
+        }
+
+        function sortData() {
+            const sortBy = document.getElementById('sort-by').value;
+            currentSort = sortBy;
+            
+            let sortedData = [...consumerData];
+            
+            switch(sortBy) {
+                case 'name':
+                    sortedData.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-desc':
+                    sortedData.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                case 'date':
+                    sortedData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    break;
+                case 'date-oldest':
+                    sortedData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    break;
+                case 'device':
+                    sortedData.sort((a, b) => a.device.localeCompare(b.device));
+                    break;
+            }
+            
+            renderData(sortedData);
+        }
+
+        // --- ENHANCED RENDERING ---
+        function renderData(data) {
+            // Apply filter
+            let filteredData = data;
+            if (currentFilter !== 'all') {
+                filteredData = data.filter(c => c.status === currentFilter);
+            }
+            
+            dataList.innerHTML = '';
+            recordCount.textContent = filteredData.length;
+
+            if (filteredData.length === 0) {
+                dataList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--accent-color);">
+                        <i class="fas fa-search" style="font-size: 3em; margin-bottom: 20px;"></i>
+                        <p>// NO DEVICES FOUND</p>
+                        <p style="font-size: 0.9em; color: var(--main-color); margin-top: 10px;">
+                            ${currentFilter !== 'all' ? 'Try changing the status filter' : 'Add your first device above!'}
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Mobile Card View
+            let cardHTML = '';
+            // Desktop Table View
+            let tableHTML = `
+                <table class="desktop-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Device</th>
+                            <th>MAC Address</th>
+                            <th>Vendor</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            filteredData.forEach(consumer => {
+                const safeMac = consumer.mac.replace(/'/g, "\\'");
+                const statusClass = consumer.status === 'active' ? 'status-active' : 'status-inactive';
+                const statusIcon = consumer.status === 'active' ? 'fa-check-circle' : 'fa-times-circle';
+                const tagsHTML = consumer.tags && consumer.tags.length > 0 ? 
+                    `<div class="tags-container">${consumer.tags.map(tag => 
+                        `<span class="tag" onclick="filterByTag('${tag}')">${tag} <i class="fas fa-times" onclick="event.stopPropagation();removeTag('${consumer.id}', '${tag}')"></i></span>`
+                    ).join('')}</div>` : '';
+                
+                // Card View (Mobile)
+                cardHTML += `
+                    <div class="data-card" data-id="${consumer.id}">
+                        <div class="data-field">
+                            <strong>Name:</strong>
+                            <span>${consumer.name}</span>
+                            <span class="status-badge ${statusClass}">
+                                <i class="fas ${statusIcon}"></i> ${consumer.status}
+                            </span>
+                        </div>
+                        <div class="data-field">
+                            <strong>Device:</strong>
+                            <span>${consumer.device}</span>
+                        </div>
+                        <div class="data-field">
+                            <strong>MAC:</strong>
+                            <span class="mac-address">${consumer.mac}</span>
+                        </div>
+                        <div class="data-field">
+                            <strong>Vendor:</strong>
+                            <span>${consumer.vendor || getVendorFromMAC(consumer.mac)}</span>
+                        </div>
+                        <div class="data-field">
+                            <strong>Added:</strong>
+                            <span>${formatDate(consumer.createdAt)}</span>
+                        </div>
+                        ${tagsHTML}
+                        ${consumer.notes ? `<div class="data-field"><strong>Notes:</strong><span>${consumer.notes}</span></div>` : ''}
+                        <div class="card-actions">
+                            <button class="btn-copy" onclick="copyMac('${safeMac}')">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <button class="btn-status" onclick="toggleStatus('${consumer.id}')">
+                                <i class="fas fa-power-off"></i> Toggle
+                            </button>
+                            <button class="btn-edit" onclick="editConsumer('${consumer.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn-delete" onclick="deleteConsumer('${consumer.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Table View (Desktop)
+                tableHTML += `
+                    <tr data-id="${consumer.id}">
+                        <td><strong>${consumer.name}</strong></td>
+                        <td>${consumer.device}</td>
+                        <td><span class="mac-address">${consumer.mac}</span></td>
+                        <td>${consumer.vendor || getVendorFromMAC(consumer.mac)}</td>
+                        <td>
+                            <span class="status-badge ${statusClass}">
+                                <i class="fas ${statusIcon}"></i> ${consumer.status}
+                            </span>
+                        </td>
+                        <td>${formatDate(consumer.createdAt)}</td>
+                        <td class="table-actions">
+                            <button class="btn-copy" onclick="copyMac('${safeMac}')" title="Copy MAC">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="btn-status" onclick="toggleStatus('${consumer.id}')" title="Toggle Status">
+                                <i class="fas fa-power-off"></i>
+                            </button>
+                            <button class="btn-edit" onclick="editConsumer('${consumer.id}')" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-delete" onclick="deleteConsumer('${consumer.id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += '</tbody></table>';
+            dataList.innerHTML = cardHTML + tableHTML;
+        }
+
+        function filterByTag(tag) {
+            searchInput.value = tag;
+            handleSearch();
+        }
+
+        function removeTag(id, tag) {
+            const index = consumerData.findIndex(c => c.id === id);
+            if (index !== -1) {
+                consumerData[index].tags = consumerData[index].tags.filter(t => t !== tag);
+                saveData();
+                showMessage(`Tag "${tag}" removed!`, false, 2000);
+            }
+        }
+
+        // --- ENHANCED SEARCH FUNCTIONALITY ---
+        function handleSearch() {
+            const query = searchInput.value.toLowerCase().trim();
+            if (query === '') {
+                renderData(consumerData);
+                return;
+            }
+
+            const filteredData = consumerData.filter(consumer => 
+                consumer.name.toLowerCase().includes(query) ||
+                consumer.device.toLowerCase().includes(query) ||
+                consumer.mac.toLowerCase().includes(query) ||
+                (consumer.vendor && consumer.vendor.toLowerCase().includes(query)) ||
+                (consumer.tags && consumer.tags.some(tag => tag.toLowerCase().includes(query))) ||
+                (consumer.notes && consumer.notes.toLowerCase().includes(query))
+            );
+
+            renderData(filteredData);
+        }
+
+        // --- ENHANCED IMPORT/EXPORT ---
+        function exportData() {
+            if (consumerData.length === 0) {
+                showMessage('No data to export!', true);
+                return;
+            }
+            
+            try {
+                const dataStr = JSON.stringify(consumerData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const dataUrl = URL.createObjectURL(dataBlob);
+                
+                const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+                const filename = `updev_mac_backup_${timestamp}.json`;
+
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(dataUrl);
+                
+                showMessage(`Exported ${consumerData.length} devices!`, false);
+            } catch (e) {
+                showMessage(`EXPORT ERROR: ${e.message}`, true);
+            }
+        }
+
+        function exportCSV() {
+            if (consumerData.length === 0) {
+                showMessage('No data to export!', true);
+                return;
+            }
+            
+            try {
+                const headers = ['Name', 'Device', 'MAC Address', 'Vendor', 'Status', 'Tags', 'Notes', 'Created', 'Updated'];
+                const csvData = consumerData.map(item => [
+                    `"${item.name}"`,
+                    `"${item.device}"`,
+                    item.mac,
+                    `"${item.vendor || ''}"`,
+                    item.status,
+                    `"${(item.tags || []).join(',')}"`,
+                    `"${(item.notes || '').replace(/"/g, '""')}"`,
+                    item.createdAt,
+                    item.updatedAt
+                ]);
+                
+                const csvContent = [headers.join(','), ...csvData.map(row => row.join(','))].join('\n');
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                
+                const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+                const filename = `updev_mac_export_${timestamp}.csv`;
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                showMessage(`Exported ${consumerData.length} devices as CSV!`, false);
+            } catch (e) {
+                showMessage(`CSV EXPORT ERROR: ${e.message}`, true);
+            }
+        }
+
+        function importData() {
+            const fileInput = document.getElementById('import-file');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showMessage('Please select a file to import!', true);
+                return;
+            }
+
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    let importedData;
+                    if (file.name.endsWith('.csv')) {
+                        // Parse CSV
+                        const csv = e.target.result;
+                        const lines = csv.split('\n');
+                        const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+                        importedData = lines.slice(1).filter(line => line.trim()).map(line => {
+                            const values = line.split(',').map(v => v.replace(/^"|"$/g, '').trim());
+                            const obj = {};
+                            headers.forEach((header, i) => {
+                                obj[header.toLowerCase().replace(' ', '_')] = values[i] || '';
+                            });
+                            return {
+                                id: generateId(),
+                                name: obj.name || '',
+                                device: obj.device || '',
+                                mac: (obj.mac_address || obj.mac).toUpperCase(),
+                                status: obj.status || 'active',
+                                tags: obj.tags ? obj.tags.split(',').map(t => t.trim()) : [],
+                                notes: obj.notes || '',
+                                vendor: getVendorFromMAC(obj.mac_address || obj.mac),
+                                createdAt: obj.created || new Date().toISOString(),
+                                updatedAt: obj.updated || new Date().toISOString()
+                            };
+                        });
+                    } else {
+                        // Parse JSON
+                        importedData = JSON.parse(e.target.result);
+                    }
+                    
+                    if (!Array.isArray(importedData)) {
+                        throw new Error('File must contain an array of devices');
+                    }
+                    
+                    // Validate each item
+                    const isValid = importedData.every(item => 
+                        item && typeof item === 'object' &&
+                        typeof item.name === 'string' &&
+                        typeof item.mac === 'string'
+                    );
+                    
+                    if (!isValid) {
+                        throw new Error('Invalid data structure in file');
+                    }
+                    
+                    const importMode = confirm(`Import ${importedData.length} devices. Replace current data? (Cancel to merge)`);
+                    
+                    if (importMode) {
+                        // Replace
+                        consumerData = importedData.map(item => ({
+                            id: item.id || generateId(),
+                            name: item.name,
+                            device: item.device || 'Unknown Device',
+                            mac: item.mac.toUpperCase(),
+                            status: item.status || 'active',
+                            tags: item.tags || [],
+                            notes: item.notes || '',
+                            vendor: item.vendor || getVendorFromMAC(item.mac),
+                            createdAt: item.createdAt || new Date().toISOString(),
+                            updatedAt: item.updatedAt || new Date().toISOString()
+                        }));
+                    } else {
+                        // Merge (avoid duplicates by MAC)
+                        const existingMacs = new Set(consumerData.map(c => c.mac));
+                        const newDevices = importedData
+                            .filter(item => !existingMacs.has(item.mac.toUpperCase()))
+                            .map(item => ({
+                                id: generateId(),
+                                name: item.name,
+                                device: item.device || 'Unknown Device',
+                                mac: item.mac.toUpperCase(),
+                                status: item.status || 'active',
+                                tags: item.tags || [],
+                                notes: item.notes || '',
+                                vendor: item.vendor || getVendorFromMAC(item.mac),
+                                createdAt: item.createdAt || new Date().toISOString(),
+                                updatedAt: new Date().toISOString()
+                            }));
+                        
+                        consumerData = [...newDevices, ...consumerData];
+                    }
+                    
+                    saveData();
+                    showMessage(`Imported ${importedData.length} devices successfully!`, false);
+                    fileInput.value = '';
+                } catch (error) {
+                    showMessage(`IMPORT ERROR: ${error.message}`, true);
+                }
+            };
+            
+            reader.onerror = () => showMessage('Failed to read file!', true);
+            reader.readAsText(file);
+        }
+
+        function clearAllData() {
+            if (consumerData.length === 0) {
+                showMessage('No data to clear!', true);
+                return;
+            }
+            
+            if (confirm('⚠️ DANGER: This will delete ALL devices permanently! Continue?')) {
+                // Create backup before clearing
+                localStorage.setItem(BACKUP_KEY, JSON.stringify(consumerData));
+                
+                consumerData = [];
+                saveData();
+                showMessage('All data cleared! Backup created in local storage.', false);
+            }
+        }
+
+        function backupData() {
+            localStorage.setItem(BACKUP_KEY, JSON.stringify(consumerData));
+            showMessage('Backup created successfully!', false);
+        }
+
+        function restoreBackup() {
+            const backup = localStorage.getItem(BACKUP_KEY);
+            if (!backup) {
+                showMessage('No backup found!', true);
+                return;
+            }
+            
+            if (confirm('Restore from backup? This will replace current data.')) {
+                try {
+                    consumerData = JSON.parse(backup);
+                    saveData();
+                    showMessage('Backup restored successfully!', false);
+                } catch (error) {
+                    showMessage('Backup restoration failed!', true);
+                }
+            }
+        }
+
+        // --- ENHANCED 3D BACKGROUND ---
+        function setup3D() {
+            const canvas = document.getElementById('three-canvas');
+            
+            if (!canvas) {
+                console.warn('3D canvas not found');
+                return;
+            }
+
+            try {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ 
+                    canvas: canvas, 
+                    antialias: true, 
+                    alpha: true,
+                    powerPreference: "high-performance"
+                });
+
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                renderer.setClearColor(0x000000, 0);
+
+                // Create grid with better visuals
+                const gridSize = 80;
+                const gridDivisions = 40;
+                const gridHelper = new THREE.GridHelper(gridSize, gridDivisions, 0x00ff41, 0x00ffff);
+                gridHelper.material.opacity = 0.2;
+                gridHelper.material.transparent = true;
+                scene.add(gridHelper);
+
+                // Add floating particles
+                const particleCount = 200;
+                const particles = new THREE.BufferGeometry();
+                const positions = new Float32Array(particleCount * 3);
+                
+                for (let i = 0; i < particleCount * 3; i += 3) {
+                    positions[i] = (Math.random() - 0.5) * 100;
+                    positions[i + 1] = (Math.random() - 0.5) * 100;
+                    positions[i + 2] = (Math.random() - 0.5) * 100;
+                }
+                
+                particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                
+                const particleMaterial = new THREE.PointsMaterial({
+                    color: 0x00ff41,
+                    size: 0.1,
+                    transparent: true,
+                    opacity: 0.6
+                });
+                
+                const particleSystem = new THREE.Points(particles, particleMaterial);
+                scene.add(particleSystem);
+
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0x00ffff, 0.1);
+                scene.add(ambientLight);
+
+                const pointLight = new THREE.PointLight(0x00ff41, 0.8, 100);
+                pointLight.position.set(20, 20, 20);
+                scene.add(pointLight);
+
+                const directionalLight = new THREE.DirectionalLight(0x00ffff, 0.3);
+                directionalLight.position.set(0, 10, 5);
+                scene.add(directionalLight);
+
+                camera.position.set(0, 15, 30);
+                camera.lookAt(0, 0, 0);
+
+                // Animation
+                let time = 0;
+                function animate() {
+                    requestAnimationFrame(animate);
+                    
+                    time += 0.005;
+                    
+                    // Animate grid
+                    gridHelper.rotation.y = time * 0.1;
+                    
+                    // Animate particles
+                    const positions = particleSystem.geometry.attributes.position.array;
+                    for (let i = 0; i < positions.length; i += 3) {
+                        positions[i + 1] += Math.sin(time + i) * 0.01;
+                    }
+                    particleSystem.geometry.attributes.position.needsUpdate = true;
+                    
+                    // Move camera slightly
+                    camera.position.x = Math.sin(time * 0.2) * 5;
+                    camera.position.y = 15 + Math.sin(time * 0.3) * 2;
+                    camera.lookAt(0, 0, 0);
+                    
+                    renderer.render(scene, camera);
+                }
+
+                // Handle resize
+                function onResize() {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                }
+
+                window.addEventListener('resize', onResize);
+                animate();
+            } catch (error) {
+                console.error('3D background error:', error);
+            }
+        }
+
+        // --- ENHANCED INITIALIZATION ---
+        function init() {
+            // Load data first
+            loadData();
+            
+            // Setup 3D background
+            setup3D();
+            
+            // Attach event listeners
+            form.addEventListener('submit', handleFormSubmit);
+            searchInput.addEventListener('input', handleSearch);
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Ctrl+S to save
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    saveData();
+                }
+                // Esc to close form
+                if (e.key === 'Escape' && !form.classList.contains('hidden')) {
+                    toggleForm();
+                }
+                // Ctrl+F to focus search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+            });
+            
+            // Auto-save every 30 seconds
+            setInterval(() => {
+                if (consumerData.length > 0) {
+                    saveData();
+                }
+            }, 30000);
+            
+            // Global exports
+            window.toggleForm = toggleForm;
+            window.editConsumer = editConsumer;
+            window.deleteConsumer = deleteConsumer;
+            window.copyMac = copyMac;
+            window.exportData = exportData;
+            window.exportCSV = exportCSV;
+            window.importData = importData;
+            window.clearAllData = clearAllData;
+            window.filterByStatus = filterByStatus;
+            window.sortData = sortData;
+            window.generateRandomMAC = generateRandomMAC;
+            window.copyCurrentMAC = copyCurrentMAC;
+            window.toggleStatus = toggleStatus;
+            window.filterByTag = filterByTag;
+            window.removeTag = removeTag;
+            window.backupData = backupData;
+            window.restoreBackup = restoreBackup;
+        }
+
+        // Start the application
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+  </html>
