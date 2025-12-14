@@ -1471,7 +1471,7 @@
                 const dataUrl = URL.createObjectURL(dataBlob);
                 
                 const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
-                const filename = `updev_mac_backup_${timestamp}.json`;
+                const filename = `sikyorify_mac_backup_${timestamp}.json`;
 
                 const link = document.createElement('a');
                 link.href = dataUrl;
@@ -1512,7 +1512,7 @@
                 const url = URL.createObjectURL(blob);
                 
                 const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
-                const filename = `updev_mac_export_${timestamp}.csv`;
+                const filename = `sikyorify_mac_export_${timestamp}.csv`;
                 
                 const link = document.createElement('a');
                 link.href = url;
