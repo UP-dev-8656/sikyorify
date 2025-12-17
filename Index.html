@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,103 +9,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- 0. Core Variables and Themes --- */
+        /* --- 0. Core Professional Hacker Theme --- */
         :root {
-            --theme: 'hacker'; /* Default theme */
-            /* Theme Colors */
             --bg-color: #0d1117;
             --main-color: #00ff41;
             --accent-color: #00ffff;
             --error-color: #ff0041;
             --warning-color: #ffcc00;
-            --success-color: #00ff88;
-            --container-bg: rgba(17, 24, 39, 0.85);
-            --border-glow: 0 0 8px var(--main-color);
             --font-family: 'Consolas', 'Monospace', monospace;
-            --text-color: #00ff41;
-            --modal-bg: rgba(13, 17, 23, 0.95);
-            --card-bg: rgba(0, 0, 0, 0.5);
-            --input-bg: rgba(0, 0, 0, 0.8);
-        }
-
-        /* Theme: Hacker (Default) */
-        .theme-hacker {
-            --bg-color: #0d1117;
-            --main-color: #00ff41;
-            --accent-color: #00ffff;
-            --error-color: #ff0041;
-            --warning-color: #ffcc00;
-            --success-color: #00ff88;
             --container-bg: rgba(17, 24, 39, 0.85);
             --border-glow: 0 0 8px var(--main-color);
-            --text-color: #00ff41;
-            --modal-bg: rgba(13, 17, 23, 0.95);
-            --card-bg: rgba(0, 0, 0, 0.5);
-            --input-bg: rgba(0, 0, 0, 0.8);
-        }
-
-        /* Theme: Dark Blue */
-        .theme-dark-blue {
-            --bg-color: #0a1929;
-            --main-color: #4fc3f7;
-            --accent-color: #2979ff;
-            --error-color: #ff5252;
-            --warning-color: #ffb74d;
-            --success-color: #69f0ae;
-            --container-bg: rgba(13, 27, 42, 0.85);
-            --border-glow: 0 0 8px var(--main-color);
-            --text-color: #e3f2fd;
-            --modal-bg: rgba(10, 25, 41, 0.95);
-            --card-bg: rgba(20, 40, 60, 0.5);
-            --input-bg: rgba(20, 30, 48, 0.8);
-        }
-
-        /* Theme: Purple */
-        .theme-purple {
-            --bg-color: #1a1a2e;
-            --main-color: #9c27b0;
-            --accent-color: #e040fb;
-            --error-color: #ff4081;
-            --warning-color: #ff9800;
-            --success-color: #00e676;
-            --container-bg: rgba(26, 26, 46, 0.85);
-            --border-glow: 0 0 8px var(--main-color);
-            --text-color: #e1bee7;
-            --modal-bg: rgba(26, 26, 46, 0.95);
-            --card-bg: rgba(40, 30, 60, 0.5);
-            --input-bg: rgba(30, 20, 50, 0.8);
-        }
-
-        /* Theme: Matrix */
-        .theme-matrix {
-            --bg-color: #000000;
-            --main-color: #00ff00;
-            --accent-color: #00ff00;
-            --error-color: #ff0000;
-            --warning-color: #ffff00;
-            --success-color: #00ff00;
-            --container-bg: rgba(0, 20, 0, 0.85);
-            --border-glow: 0 0 8px #00ff00;
-            --text-color: #00ff00;
-            --modal-bg: rgba(0, 10, 0, 0.95);
-            --card-bg: rgba(0, 30, 0, 0.5);
-            --input-bg: rgba(0, 20, 0, 0.8);
-        }
-
-        /* Theme: Cyberpunk */
-        .theme-cyberpunk {
-            --bg-color: #0a0a1a;
-            --main-color: #ff00ff;
-            --accent-color: #00ffff;
-            --error-color: #ff0000;
-            --warning-color: #ffff00;
-            --success-color: #00ff00;
-            --container-bg: rgba(20, 10, 30, 0.85);
-            --border-glow: 0 0 12px var(--main-color);
-            --text-color: #ffffff;
-            --modal-bg: rgba(10, 10, 26, 0.95);
-            --card-bg: rgba(30, 20, 50, 0.5);
-            --input-bg: rgba(20, 10, 40, 0.8);
+            --success-color: #00ff88;
         }
 
         * {
@@ -112,8 +27,7 @@
             margin: 0;
             padding: 0;
             font-family: var(--font-family);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            color: var(--main-color);
         }
 
         html, body {
@@ -198,197 +112,7 @@
             50% { box-shadow: 0 0 15px var(--main-color), inset 0 0 5px var(--main-color); }
         }
 
-        /* --- 3. Modal Styles --- */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-            animation: modalFadeIn 0.3s ease-out;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background: var(--modal-bg);
-            border: 2px solid var(--main-color);
-            border-radius: 10px;
-            padding: 25px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 0 30px var(--main-color);
-            position: relative;
-            animation: modalSlideIn 0.3s ease-out;
-        }
-
-        @keyframes modalSlideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--main-color);
-        }
-
-        .modal-header h2 {
-            margin: 0;
-            color: var(--accent-color);
-        }
-
-        .modal-close {
-            background: transparent;
-            border: none;
-            color: var(--main-color);
-            font-size: 1.5em;
-            cursor: pointer;
-            padding: 5px 10px;
-            transition: all 0.3s;
-        }
-
-        .modal-close:hover {
-            color: var(--accent-color);
-            transform: scale(1.1);
-        }
-
-        .modal-body {
-            margin-bottom: 20px;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(var(--main-color-rgb), 0.3);
-        }
-
-        /* Confirmation Modal */
-        .confirmation-modal .modal-content {
-            max-width: 500px;
-        }
-
-        .confirmation-icon {
-            text-align: center;
-            font-size: 3em;
-            color: var(--warning-color);
-            margin-bottom: 20px;
-        }
-
-        .confirmation-message {
-            text-align: center;
-            margin-bottom: 25px;
-            line-height: 1.5;
-            font-size: 1.1em;
-        }
-
-        .confirmation-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        /* Theme Selector Modal */
-        .theme-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .theme-option {
-            background: var(--card-bg);
-            border: 2px solid var(--main-color);
-            border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .theme-option:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(var(--main-color-rgb), 0.3);
-            border-color: var(--accent-color);
-        }
-
-        .theme-option.active {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 15px var(--accent-color);
-            background: rgba(var(--accent-color-rgb), 0.1);
-        }
-
-        .theme-preview {
-            width: 100%;
-            height: 80px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .theme-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .theme-desc {
-            font-size: 0.85em;
-            opacity: 0.8;
-        }
-
-        /* Backup Modal */
-        .backup-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .backup-option {
-            background: var(--card-bg);
-            border: 1px solid var(--main-color);
-            border-radius: 5px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .backup-option:hover {
-            background: rgba(var(--main-color-rgb), 0.1);
-            border-color: var(--accent-color);
-        }
-
-        .backup-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .backup-date {
-            font-size: 0.85em;
-            opacity: 0.7;
-        }
-
-        /* --- 4. Enhanced Form Styling --- */
+        /* --- 3. Enhanced Form Styling --- */
         .input-group {
             margin-bottom: 15px;
             position: relative;
@@ -406,9 +130,9 @@
         input[type="text"], input[type="file"], select, textarea {
             width: 100%;
             padding: 12px 15px;
-            background: var(--input-bg);
+            background: rgba(0, 0, 0, 0.8);
             border: 1px solid var(--main-color);
-            color: var(--text-color);
+            color: var(--main-color);
             font-size: 1em;
             transition: all 0.3s;
             border-radius: 4px;
@@ -424,7 +148,7 @@
             outline: none;
             border-color: var(--accent-color);
             box-shadow: 0 0 10px var(--accent-color);
-            background: var(--input-bg);
+            background: rgba(0, 0, 0, 0.9);
         }
 
         .form-row {
@@ -439,7 +163,7 @@
             margin-bottom: 0;
         }
 
-        /* --- 5. Enhanced Button Styles --- */
+        /* --- 4. Enhanced Button Styles --- */
         button {
             padding: 12px 15px;
             cursor: pointer;
@@ -530,43 +254,31 @@
             box-shadow: 0 0 15px var(--accent-color);
         }
         .btn-copy { 
-            background: rgba(var(--main-color-rgb), 0.1); 
+            background: rgba(0, 255, 65, 0.1); 
             color: var(--main-color);
             border: 1px solid var(--main-color);
         }
         .btn-copy:hover { 
-            background: rgba(var(--main-color-rgb), 0.3); 
+            background: rgba(0, 255, 65, 0.3); 
         }
         .btn-status {
-            background: rgba(var(--success-color-rgb), 0.1);
+            background: rgba(0, 255, 136, 0.1);
             color: var(--success-color);
             border: 1px solid var(--success-color);
         }
         .btn-status:hover {
-            background: rgba(var(--success-color-rgb), 0.3);
+            background: rgba(0, 255, 136, 0.3);
         }
         .btn-clear-all {
-            background: rgba(var(--error-color-rgb), 0.1);
+            background: rgba(255, 0, 65, 0.1);
             color: var(--error-color);
             border: 1px solid var(--error-color);
         }
         .btn-clear-all:hover {
-            background: rgba(var(--error-color-rgb), 0.3);
+            background: rgba(255, 0, 65, 0.3);
         }
 
-        /* Theme button */
-        .btn-theme {
-            background: rgba(var(--accent-color-rgb), 0.1);
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
-        }
-
-        .btn-theme:hover {
-            background: rgba(var(--accent-color-rgb), 0.3);
-            box-shadow: 0 0 15px var(--accent-color);
-        }
-
-        /* --- 6. Enhanced Data Display --- */
+        /* --- 5. Enhanced Data Display --- */
         #data-list {
             margin-top: 20px;
             width: 100%;
@@ -575,7 +287,7 @@
 
         /* Mobile Cards */
         .data-card {
-            background: var(--card-bg);
+            background: rgba(0, 0, 0, 0.5);
             border-left: 4px solid var(--main-color);
             padding: 15px;
             margin-bottom: 15px;
@@ -589,7 +301,7 @@
         }
 
         .data-card:hover {
-            box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
             transform: translateY(-5px);
         }
 
@@ -632,7 +344,7 @@
             font-family: 'Courier New', monospace;
             font-weight: bold;
             letter-spacing: 1px;
-            background: rgba(var(--main-color-rgb), 0.1);
+            background: rgba(0, 255, 65, 0.1);
             padding: 3px 8px;
             border-radius: 3px;
             word-break: break-word;
@@ -650,13 +362,13 @@
         }
 
         .status-active {
-            background: rgba(var(--success-color-rgb), 0.2);
+            background: rgba(0, 255, 136, 0.2);
             color: var(--success-color);
             border: 1px solid var(--success-color);
         }
 
         .status-inactive {
-            background: rgba(var(--warning-color-rgb), 0.2);
+            background: rgba(255, 204, 0, 0.2);
             color: var(--warning-color);
             border: 1px solid var(--warning-color);
         }
@@ -690,12 +402,12 @@
         .desktop-table td {
             padding: 12px 10px;
             text-align: left;
-            border-bottom: 1px solid rgba(var(--main-color-rgb), 0.3);
+            border-bottom: 1px solid rgba(0, 255, 65, 0.3);
             font-size: 0.9em;
         }
 
         .desktop-table th {
-            background: rgba(var(--main-color-rgb), 0.1);
+            background: rgba(0, 255, 65, 0.1);
             color: var(--accent-color);
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -707,12 +419,12 @@
         }
         
         .desktop-table td {
-            background: var(--card-bg);
+            background: rgba(0, 0, 0, 0.4);
             transition: background 0.3s;
         }
 
         .desktop-table tr:hover td {
-            background: rgba(var(--main-color-rgb), 0.1);
+            background: rgba(0, 255, 65, 0.1);
         }
 
         .table-actions {
@@ -728,21 +440,8 @@
             min-height: auto;
         }
 
-        /* --- 7. Header Controls --- */
-        .header-controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .header-controls button {
-            flex: 0 1 auto;
-            min-width: 140px;
-        }
-
-        /* --- 8. Responsive Layout Adjustments --- */
+        /* --- 6. Responsive Layout Adjustments --- */
+        /* Small Mobile (portrait) */
         @media (max-width: 480px) {
             #overlay {
                 padding: 10px;
@@ -756,19 +455,6 @@
             .container {
                 padding: 12px;
                 margin-bottom: 15px;
-            }
-            
-            .modal-content {
-                padding: 15px;
-                margin: 10px;
-            }
-            
-            .theme-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .confirmation-actions {
-                flex-direction: column;
             }
             
             button {
@@ -801,13 +487,10 @@
             }
         }
 
+        /* Mobile (landscape) and small tablets */
         @media (min-width: 481px) and (max-width: 767px) {
             .form-row .input-group {
                 flex: 1 1 calc(50% - 8px);
-            }
-            
-            .theme-grid {
-                grid-template-columns: repeat(2, 1fr);
             }
             
             .card-actions button {
@@ -824,6 +507,7 @@
             }
         }
 
+        /* Tablets and small desktops */
         @media (min-width: 768px) and (max-width: 1023px) {
             .data-card { display: none; }
             .desktop-table { display: table; }
@@ -832,15 +516,12 @@
                 flex: 1 1 calc(50% - 8px);
             }
             
-            .theme-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
             .stats-panel {
                 flex-wrap: nowrap;
             }
         }
 
+        /* Desktop and larger screens */
         @media (min-width: 1024px) {
             .data-card { display: none; }
             .desktop-table { display: table; }
@@ -849,16 +530,23 @@
                 flex: 1 1 auto;
             }
             
-            .theme-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
             .stats-panel {
                 flex-wrap: nowrap;
             }
         }
 
-        /* --- 9. Enhanced Utility and Error Handling --- */
+        /* Very large screens */
+        @media (min-width: 1200px) {
+            #overlay {
+                padding: 20px;
+            }
+            
+            .container {
+                padding: 25px;
+            }
+        }
+
+        /* --- 7. Enhanced Utility and Error Handling --- */
         .hidden {
             display: none !important;
         }
@@ -879,14 +567,14 @@
 
         .error-message {
             border: 1px solid var(--error-color);
-            background-color: rgba(var(--error-color-rgb), 0.1);
+            background-color: rgba(255, 0, 65, 0.1);
             color: var(--error-color);
             animation: pulse 1.5s infinite alternate;
         }
         
         .status-message {
             border: 1px solid var(--main-color);
-            background-color: rgba(var(--main-color-rgb), 0.1);
+            background-color: rgba(0, 255, 65, 0.1);
             color: var(--main-color);
         }
 
@@ -968,9 +656,9 @@
             justify-content: space-between;
             margin-bottom: 20px;
             padding: 15px;
-            background: var(--card-bg);
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
-            border: 1px solid rgba(var(--main-color-rgb), 0.3);
+            border: 1px solid rgba(0, 255, 65, 0.3);
         }
 
         .stat-item {
@@ -1017,7 +705,7 @@
         }
 
         .tag {
-            background: rgba(var(--accent-color-rgb), 0.1);
+            background: rgba(0, 255, 255, 0.1);
             border: 1px solid var(--accent-color);
             padding: 3px 8px;
             border-radius: 12px;
@@ -1026,12 +714,6 @@
             align-items: center;
             gap: 5px;
             white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .tag:hover {
-            background: rgba(var(--accent-color-rgb), 0.2);
         }
 
         .tag i {
@@ -1066,7 +748,7 @@
             color: var(--main-color);
             font-size: 0.8em;
             padding: 15px;
-            border-top: 1px solid rgba(var(--main-color-rgb), 0.3);
+            border-top: 1px solid rgba(0, 255, 65, 0.3);
             width: 100%;
         }
         
@@ -1081,25 +763,54 @@
             width: auto;
             margin: 5px;
         }
+
+        /* Form responsiveness improvements */
+        #consumer-form {
+            width: 100%;
+        }
+        
+        /* Make sure the table scrolls horizontally on mobile */
+        @media (max-width: 767px) {
+            #data-list {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .desktop-table {
+                min-width: 800px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            button, input, select, textarea {
+                min-height: 44px; /* Minimum touch target size */
+            }
+            
+            .table-actions button {
+                min-height: 36px;
+                padding: 8px 10px;
+            }
+            
+            .card-actions button {
+                min-height: 40px;
+            }
+            
+            /* Reduce hover effects on touch devices */
+            button:hover {
+                transform: none;
+            }
+            
+            .data-card:hover {
+                transform: none;
+            }
+        }
     </style>
 </head>
 <body>
     <canvas id="three-canvas"></canvas>
 
     <div id="overlay">
-        <!-- Header Controls -->
-        <div class="header-controls">
-            <button class="btn-theme" onclick="openThemeModal()">
-                <i class="fas fa-palette"></i> CHANGE THEME
-            </button>
-            <button class="btn-copy" onclick="showBackupModal()">
-                <i class="fas fa-history"></i> BACKUP/RESTORE
-            </button>
-            <button class="btn-status" onclick="showBulkActionsModal()">
-                <i class="fas fa-tasks"></i> BULK ACTIONS
-            </button>
-        </div>
-
         <h1><i class="fas fa-network-wired"></i> Sikyorify // MAC Manager PRO</h1>
         
         <div id="message-container" class="container hidden"></div>
@@ -1221,7 +932,7 @@
                 <button onclick="importData()">
                     <i class="fas fa-upload"></i> IMPORT DATA
                 </button>
-                <button class="btn-clear-all" onclick="showClearAllConfirmation()">
+                <button class="btn-clear-all" onclick="clearAllData()">
                     <i class="fas fa-trash-alt"></i> CLEAR ALL
                 </button>
             </div>
@@ -1237,194 +948,19 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p>U-P.dev MAC Manager v3.0 | <span id="last-save">Never saved</span></p>
-            <p>Current Theme: <span id="current-theme">Hacker</span> | 
-               <button class="btn-copy" onclick="openThemeModal()"><i class="fas fa-palette"></i> Change</button>
-            </p>
-        </div>
-    </div>
-
-    <!-- Modals -->
-    <!-- Theme Selector Modal -->
-    <div id="theme-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-palette"></i> Select Theme</h2>
-                <button class="modal-close" onclick="closeThemeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="theme-grid">
-                    <div class="theme-option active" data-theme="hacker" onclick="selectTheme('hacker')">
-                        <div class="theme-preview" style="background: linear-gradient(135deg, #0d1117, #00ff41);"></div>
-                        <div class="theme-name">Hacker</div>
-                        <div class="theme-desc">Default green/black matrix style</div>
-                    </div>
-                    <div class="theme-option" data-theme="dark-blue" onclick="selectTheme('dark-blue')">
-                        <div class="theme-preview" style="background: linear-gradient(135deg, #0a1929, #4fc3f7);"></div>
-                        <div class="theme-name">Dark Blue</div>
-                        <div class="theme-desc">Professional blue theme</div>
-                    </div>
-                    <div class="theme-option" data-theme="purple" onclick="selectTheme('purple')">
-                        <div class="theme-preview" style="background: linear-gradient(135deg, #1a1a2e, #9c27b0);"></div>
-                        <div class="theme-name">Purple</div>
-                        <div class="theme-desc">Dark purple cyber theme</div>
-                    </div>
-                    <div class="theme-option" data-theme="matrix" onclick="selectTheme('matrix')">
-                        <div class="theme-preview" style="background: linear-gradient(135deg, #000000, #00ff00);"></div>
-                        <div class="theme-name">Matrix</div>
-                        <div class="theme-desc">Classic green matrix</div>
-                    </div>
-                    <div class="theme-option" data-theme="cyberpunk" onclick="selectTheme('cyberpunk')">
-                        <div class="theme-preview" style="background: linear-gradient(135deg, #0a0a1a, #ff00ff);"></div>
-                        <div class="theme-name">Cyberpunk</div>
-                        <div class="theme-desc">Neon pink/cyan theme</div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-clear-all" onclick="resetToDefaultTheme()">
-                    <i class="fas fa-redo"></i> Reset to Default
-                </button>
-                <button class="btn-confirm" onclick="applySelectedTheme()">
-                    <i class="fas fa-check"></i> Apply Theme
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Confirmation Modal -->
-    <div id="confirmation-modal" class="modal confirmation-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="confirmation-title">Confirm Action</h2>
-                <button class="modal-close" onclick="closeConfirmationModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="confirmation-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div class="confirmation-message" id="confirmation-message">
-                    Are you sure you want to proceed?
-                </div>
-                <div class="confirmation-actions">
-                    <button class="btn-clear-all" onclick="closeConfirmationModal()">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                    <button class="btn-confirm" id="confirmation-confirm">
-                        <i class="fas fa-check"></i> Confirm
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Backup/Restore Modal -->
-    <div id="backup-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-history"></i> Backup & Restore</h2>
-                <button class="modal-close" onclick="closeBackupModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="backup-options">
-                    <div class="backup-option" onclick="createBackup()">
-                        <div class="backup-info">
-                            <div>
-                                <strong><i class="fas fa-save"></i> Create Backup</strong>
-                                <p>Save current data to local storage</p>
-                            </div>
-                            <div class="backup-date" id="last-backup-date">Never</div>
-                        </div>
-                    </div>
-                    <div class="backup-option" onclick="restoreBackup()">
-                        <div class="backup-info">
-                            <div>
-                                <strong><i class="fas fa-undo"></i> Restore Backup</strong>
-                                <p>Restore data from last backup</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="backup-option" onclick="exportBackup()">
-                        <div class="backup-info">
-                            <div>
-                                <strong><i class="fas fa-file-export"></i> Export Backup File</strong>
-                                <p>Download backup as JSON file</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="backup-option" onclick="importBackupFile()">
-                        <div class="backup-info">
-                            <div>
-                                <strong><i class="fas fa-file-import"></i> Import Backup File</strong>
-                                <p>Upload and restore from JSON file</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-clear-all" onclick="closeBackupModal()">
-                    <i class="fas fa-times"></i> Close
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bulk Actions Modal -->
-    <div id="bulk-actions-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-tasks"></i> Bulk Actions</h2>
-                <button class="modal-close" onclick="closeBulkActionsModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="input-group">
-                    <label class="input-label"><i class="fas fa-filter"></i> Apply to:</label>
-                    <select id="bulk-target">
-                        <option value="all">All Devices</option>
-                        <option value="active">Active Devices Only</option>
-                        <option value="inactive">Inactive Devices Only</option>
-                        <option value="selected">Selected Devices Only</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label class="input-label"><i class="fas fa-cog"></i> Action:</label>
-                    <select id="bulk-action">
-                        <option value="activate">Activate All</option>
-                        <option value="deactivate">Deactivate All</option>
-                        <option value="add-tag">Add Tag</option>
-                        <option value="remove-tag">Remove Tag</option>
-                        <option value="delete">Delete All</option>
-                    </select>
-                </div>
-                <div class="input-group hidden" id="bulk-tag-input">
-                    <label class="input-label"><i class="fas fa-tag"></i> Tag:</label>
-                    <input type="text" id="bulk-tag" placeholder="Enter tag name">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-clear-all" onclick="closeBulkActionsModal()">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
-                <button class="btn-confirm" onclick="executeBulkAction()">
-                    <i class="fas fa-play"></i> Execute
-                </button>
-            </div>
+            <p>U-P.dev MAC Manager v2.0 | <span id="last-save">Never saved</span></p>
+            <p>Total Storage: <span id="storage-size">0 KB</span> | <button class="btn-copy" onclick="backupData()"><i class="fas fa-save"></i> Create Backup</button></p>
         </div>
     </div>
 
     <script>
         // --- ENHANCED MAIN APPLICATION ---
-        const STORAGE_KEY = 'updev_mac_data_v3';
+        const STORAGE_KEY = 'updev_mac_data_v2';
         const BACKUP_KEY = 'updev_mac_backup';
-        const THEME_KEY = 'updev_mac_theme';
-        
         let consumerData = [];
         let isEditing = false;
         let currentFilter = 'all';
         let currentSort = 'date';
-        let selectedTheme = localStorage.getItem(THEME_KEY) || 'hacker';
-        let pendingAction = null;
 
         // Vendor database (partial)
         const VENDOR_DB = {
@@ -1454,13 +990,6 @@
         const storageUsed = document.getElementById('storage-used');
         const lastSave = document.getElementById('last-save');
         const storageSize = document.getElementById('storage-size');
-        const currentThemeElement = document.getElementById('current-theme');
-        
-        // Modal Elements
-        const themeModal = document.getElementById('theme-modal');
-        const confirmationModal = document.getElementById('confirmation-modal');
-        const backupModal = document.getElementById('backup-modal');
-        const bulkActionsModal = document.getElementById('bulk-actions-modal');
 
         // --- ENHANCED UTILITY FUNCTIONS ---
         const generateId = () => Date.now().toString(36) + Math.random().toString(36).substring(2);
@@ -1497,195 +1026,6 @@
             storageUsed.textContent = `${size} KB`;
             storageSize.textContent = `${size} KB`;
             return size;
-        }
-
-        // --- MODAL FUNCTIONS ---
-        function openModal(modal) {
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal(modal) {
-            modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Theme Modal
-        function openThemeModal() {
-            openModal(themeModal);
-            // Highlight current theme
-            document.querySelectorAll('.theme-option').forEach(option => {
-                option.classList.remove('active');
-                if (option.dataset.theme === selectedTheme) {
-                    option.classList.add('active');
-                }
-            });
-        }
-
-        function closeThemeModal() {
-            closeModal(themeModal);
-        }
-
-        function selectTheme(theme) {
-            selectedTheme = theme;
-            document.querySelectorAll('.theme-option').forEach(option => {
-                option.classList.remove('active');
-                if (option.dataset.theme === theme) {
-                    option.classList.add('active');
-                }
-            });
-        }
-
-        function applySelectedTheme() {
-            setTheme(selectedTheme);
-            closeThemeModal();
-            showMessage(`Theme changed to ${selectedTheme}`, false, 2000);
-        }
-
-        function resetToDefaultTheme() {
-            selectTheme('hacker');
-            setTheme('hacker');
-            showMessage('Theme reset to default', false, 2000);
-        }
-
-        function setTheme(theme) {
-            document.body.className = `theme-${theme}`;
-            localStorage.setItem(THEME_KEY, theme);
-            selectedTheme = theme;
-            currentThemeElement.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
-            
-            // Update CSS variables for theme
-            updateThemeColors();
-        }
-
-        function updateThemeColors() {
-            // This function updates CSS custom properties based on the theme
-            const root = document.documentElement;
-            // Add any dynamic color updates here if needed
-        }
-
-        // Confirmation Modal
-        function showConfirmation(title, message, confirmCallback) {
-            document.getElementById('confirmation-title').textContent = title;
-            document.getElementById('confirmation-message').textContent = message;
-            
-            const confirmBtn = document.getElementById('confirmation-confirm');
-            confirmBtn.onclick = () => {
-                confirmCallback();
-                closeConfirmationModal();
-            };
-            
-            openModal(confirmationModal);
-        }
-
-        function closeConfirmationModal() {
-            closeModal(confirmationModal);
-        }
-
-        function showClearAllConfirmation() {
-            showConfirmation(
-                'Clear All Data',
-                '⚠️ DANGER: This will delete ALL devices permanently! Continue?',
-                clearAllData
-            );
-        }
-
-        // Backup Modal
-        function showBackupModal() {
-            const lastBackup = localStorage.getItem('last_backup');
-            const lastBackupDate = lastBackup ? formatDate(lastBackup) : 'Never';
-            document.getElementById('last-backup-date').textContent = lastBackupDate;
-            openModal(backupModal);
-        }
-
-        function closeBackupModal() {
-            closeModal(backupModal);
-        }
-
-        // Bulk Actions Modal
-        function showBulkActionsModal() {
-            openModal(bulkActionsModal);
-            // Update bulk action UI
-            document.getElementById('bulk-action').addEventListener('change', function() {
-                const tagInput = document.getElementById('bulk-tag-input');
-                if (this.value === 'add-tag' || this.value === 'remove-tag') {
-                    tagInput.classList.remove('hidden');
-                } else {
-                    tagInput.classList.add('hidden');
-                }
-            });
-        }
-
-        function closeBulkActionsModal() {
-            closeModal(bulkActionsModal);
-        }
-
-        function executeBulkAction() {
-            const target = document.getElementById('bulk-target').value;
-            const action = document.getElementById('bulk-action').value;
-            const tag = document.getElementById('bulk-tag').value.trim();
-            
-            let devicesToProcess = [];
-            
-            switch(target) {
-                case 'all':
-                    devicesToProcess = [...consumerData];
-                    break;
-                case 'active':
-                    devicesToProcess = consumerData.filter(d => d.status === 'active');
-                    break;
-                case 'inactive':
-                    devicesToProcess = consumerData.filter(d => d.status === 'inactive');
-                    break;
-                case 'selected':
-                    // In a real app, you'd have a selection system
-                    showMessage('Please implement device selection first', true);
-                    return;
-            }
-            
-            if (devicesToProcess.length === 0) {
-                showMessage('No devices to process!', true);
-                return;
-            }
-            
-            showConfirmation(
-                'Execute Bulk Action',
-                `Are you sure you want to ${action} ${devicesToProcess.length} device(s)?`,
-                () => {
-                    devicesToProcess.forEach(device => {
-                        switch(action) {
-                            case 'activate':
-                                device.status = 'active';
-                                break;
-                            case 'deactivate':
-                                device.status = 'inactive';
-                                break;
-                            case 'add-tag':
-                                if (tag && !device.tags.includes(tag)) {
-                                    device.tags.push(tag);
-                                }
-                                break;
-                            case 'remove-tag':
-                                if (tag) {
-                                    device.tags = device.tags.filter(t => t !== tag);
-                                }
-                                break;
-                            case 'delete':
-                                consumerData = consumerData.filter(d => d.id !== device.id);
-                                break;
-                        }
-                        device.updatedAt = new Date().toISOString();
-                    });
-                    
-                    if (action === 'delete') {
-                        // Already filtered in the loop
-                    }
-                    
-                    saveData();
-                    showMessage(`Bulk action completed: ${action} on ${devicesToProcess.length} devices`, false);
-                    closeBulkActionsModal();
-                }
-            );
         }
 
         // --- ENHANCED DATA MANAGEMENT ---
@@ -1888,20 +1228,16 @@
         }
 
         function deleteConsumer(id) {
-            showConfirmation(
-                'Delete Device',
-                'Are you sure you want to delete this device permanently?',
-                () => {
-                    const deleted = consumerData.find(c => c.id === id);
-                    consumerData = consumerData.filter(c => c.id !== id);
-                    saveData();
-                    showMessage(`Device "${deleted.name}" deleted!`, false);
-                    
-                    if (isEditing && document.getElementById('consumer-id').value === id) {
-                        resetForm();
-                    }
+            if (confirm('⚠️ SYSTEM ALERT: Delete this device permanently?')) {
+                const deleted = consumerData.find(c => c.id === id);
+                consumerData = consumerData.filter(c => c.id !== id);
+                saveData();
+                showMessage(`Device "${deleted.name}" deleted!`, false);
+                
+                if (isEditing && document.getElementById('consumer-id').value === id) {
+                    resetForm();
                 }
-            );
+            }
         }
 
         function toggleStatus(id) {
@@ -1928,7 +1264,7 @@
             // Update active button state
             document.querySelectorAll('.filter-group .btn-status').forEach(btn => {
                 btn.style.background = btn.textContent.toLowerCase() === status ? 
-                    'rgba(var(--success-color-rgb), 0.3)' : 'rgba(var(--success-color-rgb), 0.1)';
+                    'rgba(0, 255, 136, 0.3)' : 'rgba(0, 255, 136, 0.1)';
             });
         }
 
@@ -2124,76 +1460,6 @@
             renderData(filteredData);
         }
 
-        // --- BACKUP FUNCTIONS ---
-        function createBackup() {
-            localStorage.setItem(BACKUP_KEY, JSON.stringify(consumerData));
-            localStorage.setItem('last_backup', new Date().toISOString());
-            showMessage('Backup created successfully!', false);
-            document.getElementById('last-backup-date').textContent = formatDate(new Date());
-        }
-
-        function restoreBackup() {
-            showConfirmation(
-                'Restore Backup',
-                'Are you sure you want to restore from backup? This will replace current data.',
-                () => {
-                    const backup = localStorage.getItem(BACKUP_KEY);
-                    if (!backup) {
-                        showMessage('No backup found!', true);
-                        return;
-                    }
-                    
-                    try {
-                        consumerData = JSON.parse(backup);
-                        saveData();
-                        showMessage('Backup restored successfully!', false);
-                        closeBackupModal();
-                    } catch (error) {
-                        showMessage('Backup restoration failed!', true);
-                    }
-                }
-            );
-        }
-
-        function exportBackup() {
-            exportData();
-        }
-
-        function importBackupFile() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    try {
-                        const backupData = JSON.parse(e.target.result);
-                        if (!Array.isArray(backupData)) {
-                            throw new Error('Invalid backup file format');
-                        }
-                        
-                        showConfirmation(
-                            'Import Backup',
-                            `Import ${backupData.length} devices from backup file? This will replace current data.`,
-                            () => {
-                                consumerData = backupData;
-                                saveData();
-                                showMessage('Backup imported successfully!', false);
-                                closeBackupModal();
-                            }
-                        );
-                    } catch (error) {
-                        showMessage(`Import failed: ${error.message}`, true);
-                    }
-                };
-                
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-
         // --- ENHANCED IMPORT/EXPORT ---
         function exportData() {
             if (consumerData.length === 0) {
@@ -2322,13 +1588,29 @@
                         throw new Error('Invalid data structure in file');
                     }
                     
-                    showConfirmation(
-                        'Import Data',
-                        `Import ${importedData.length} devices. Replace current data? (Cancel will merge)`,
-                        () => {
-                            // Replace
-                            consumerData = importedData.map(item => ({
-                                id: item.id || generateId(),
+                    const importMode = confirm(`Import ${importedData.length} devices. Replace current data? (Cancel to merge)`);
+                    
+                    if (importMode) {
+                        // Replace
+                        consumerData = importedData.map(item => ({
+                            id: item.id || generateId(),
+                            name: item.name,
+                            device: item.device || 'Unknown Device',
+                            mac: item.mac.toUpperCase(),
+                            status: item.status || 'active',
+                            tags: item.tags || [],
+                            notes: item.notes || '',
+                            vendor: item.vendor || getVendorFromMAC(item.mac),
+                            createdAt: item.createdAt || new Date().toISOString(),
+                            updatedAt: item.updatedAt || new Date().toISOString()
+                        }));
+                    } else {
+                        // Merge (avoid duplicates by MAC)
+                        const existingMacs = new Set(consumerData.map(c => c.mac));
+                        const newDevices = importedData
+                            .filter(item => !existingMacs.has(item.mac.toUpperCase()))
+                            .map(item => ({
+                                id: generateId(),
                                 name: item.name,
                                 device: item.device || 'Unknown Device',
                                 mac: item.mac.toUpperCase(),
@@ -2337,37 +1619,15 @@
                                 notes: item.notes || '',
                                 vendor: item.vendor || getVendorFromMAC(item.mac),
                                 createdAt: item.createdAt || new Date().toISOString(),
-                                updatedAt: item.updatedAt || new Date().toISOString()
+                                updatedAt: new Date().toISOString()
                             }));
-                            saveData();
-                            showMessage(`Imported ${importedData.length} devices!`, false);
-                            fileInput.value = '';
-                        },
-                        () => {
-                            // Merge (avoid duplicates by MAC)
-                            const existingMacs = new Set(consumerData.map(c => c.mac));
-                            const newDevices = importedData
-                                .filter(item => !existingMacs.has(item.mac.toUpperCase()))
-                                .map(item => ({
-                                    id: generateId(),
-                                    name: item.name,
-                                    device: item.device || 'Unknown Device',
-                                    mac: item.mac.toUpperCase(),
-                                    status: item.status || 'active',
-                                    tags: item.tags || [],
-                                    notes: item.notes || '',
-                                    vendor: item.vendor || getVendorFromMAC(item.mac),
-                                    createdAt: item.createdAt || new Date().toISOString(),
-                                    updatedAt: new Date().toISOString()
-                                }));
-                            
-                            consumerData = [...newDevices, ...consumerData];
-                            saveData();
-                            showMessage(`Merged ${newDevices.length} new devices!`, false);
-                            fileInput.value = '';
-                        }
-                    );
+                        
+                        consumerData = [...newDevices, ...consumerData];
+                    }
                     
+                    saveData();
+                    showMessage(`Imported ${importedData.length} devices successfully!`, false);
+                    fileInput.value = '';
                 } catch (error) {
                     showMessage(`IMPORT ERROR: ${error.message}`, true);
                 }
@@ -2383,12 +1643,37 @@
                 return;
             }
             
-            // Create backup before clearing
+            if (confirm('⚠️ DANGER: This will delete ALL devices permanently! Continue?')) {
+                // Create backup before clearing
+                localStorage.setItem(BACKUP_KEY, JSON.stringify(consumerData));
+                
+                consumerData = [];
+                saveData();
+                showMessage('All data cleared! Backup created in local storage.', false);
+            }
+        }
+
+        function backupData() {
             localStorage.setItem(BACKUP_KEY, JSON.stringify(consumerData));
+            showMessage('Backup created successfully!', false);
+        }
+
+        function restoreBackup() {
+            const backup = localStorage.getItem(BACKUP_KEY);
+            if (!backup) {
+                showMessage('No backup found!', true);
+                return;
+            }
             
-            consumerData = [];
-            saveData();
-            showMessage('All data cleared! Backup created in local storage.', false);
+            if (confirm('Restore from backup? This will replace current data.')) {
+                try {
+                    consumerData = JSON.parse(backup);
+                    saveData();
+                    showMessage('Backup restored successfully!', false);
+                } catch (error) {
+                    showMessage('Backup restoration failed!', true);
+                }
+            }
         }
 
         // --- ENHANCED 3D BACKGROUND ---
@@ -2501,9 +1786,6 @@
 
         // --- ENHANCED INITIALIZATION ---
         function init() {
-            // Apply saved theme
-            setTheme(selectedTheme);
-            
             // Load data first
             loadData();
             
@@ -2521,35 +1803,15 @@
                     e.preventDefault();
                     saveData();
                 }
-                // Esc to close modals or form
-                if (e.key === 'Escape') {
-                    if (!form.classList.contains('hidden')) {
-                        toggleForm();
-                    }
-                    if (themeModal.classList.contains('active')) closeThemeModal();
-                    if (confirmationModal.classList.contains('active')) closeConfirmationModal();
-                    if (backupModal.classList.contains('active')) closeBackupModal();
-                    if (bulkActionsModal.classList.contains('active')) closeBulkActionsModal();
+                // Esc to close form
+                if (e.key === 'Escape' && !form.classList.contains('hidden')) {
+                    toggleForm();
                 }
                 // Ctrl+F to focus search
                 if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
                     e.preventDefault();
                     searchInput.focus();
                 }
-                // Ctrl+T for theme
-                if ((e.ctrlKey || e.metaKey) && e.key === 't') {
-                    e.preventDefault();
-                    openThemeModal();
-                }
-            });
-            
-            // Close modals when clicking outside
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        closeModal(modal);
-                    }
-                });
             });
             
             // Auto-save every 30 seconds
@@ -2575,13 +1837,8 @@
             window.toggleStatus = toggleStatus;
             window.filterByTag = filterByTag;
             window.removeTag = removeTag;
-            window.openThemeModal = openThemeModal;
-            window.closeThemeModal = closeThemeModal;
-            window.showBackupModal = showBackupModal;
-            window.closeBackupModal = closeBackupModal;
-            window.showBulkActionsModal = showBulkActionsModal;
-            window.closeBulkActionsModal = closeBulkActionsModal;
-            window.showClearAllConfirmation = showClearAllConfirmation;
+            window.backupData = backupData;
+            window.restoreBackup = restoreBackup;
         }
 
         // Start the application
